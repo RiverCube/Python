@@ -1,0 +1,127 @@
+import turtle 
+
+wn = turtle.Screen() #wn means windows
+wn.title("Pong by @Saheda")
+wn.bgcolor("black")
+wn.setup(width = 800, height = 600)
+wn.tracer(0)
+
+# Winner
+winning_score = 2
+
+# Score
+score_a = 0
+score_b = 0
+
+# Paddle A
+paddle_a = turtle.Turtle()
+paddle_a.speed(0) #speed of animation
+paddle_a.shape("square")
+paddle_a.color("white")
+paddle_a.shapesize(stretch_wid = 5, stretch_len = 1) # the size of the white block
+paddle_a.penup()
+paddle_a.goto(-350, 0) #in the game 0,0 is the middle --> -350 means the x-cordinate of -350 and 0 means the y-cordinate
+
+# Paddle B
+paddle_b = turtle.Turtle()
+paddle_b.speed(0) #speed of animation
+paddle_b.shape("square")
+paddle_b.color("white")
+paddle_b.shapesize(stretch_wid = 5, stretch_len = 1) # the size of the white block
+paddle_b.penup()
+paddle_b.goto(350, 0) #in the game 0,0 is the middle --> 350 means the x-cordinate of 350 and 0 means the y-cordinate
+
+# Ball
+ball = turtle.Turtle()
+ball.speed(0) #speed of animation
+ball.shape("square")
+ball.color("white")
+ball.penup()
+ball.goto(0, 0) 
+#below (dx and dy) means that everytime the ball moves, it moves by x pixels
+ball.dx = 0.05 # dx means delta x (change in x)
+ball.dy = -0.05
+
+# Pen
+pen = turtle.Turtle()
+pen.speed(0) 
+pen.color("white")
+pen.penup()
+pen.hideturtle()
+pen.goto(0, 260) 
+pen.write ("Player A: 0 Player B: 0" , align = "center", font = ("Courier", 18, "normal"))
+
+# Function
+def paddle_a_up():
+    y = paddle_a.ycor()
+    y += 20 #add 20 pixels to the y cordinate
+    paddle_a.sety(y)
+    
+def paddle_a_down():
+    y = paddle_a.ycor()
+    y -= 20 #subtract 20 pixels to the y cordinate
+    paddle_a.sety(y)
+    
+def paddle_b_up():
+    y = paddle_b.ycor()
+    y += 20 #add 20 pixels to the y cordinate
+    paddle_b.sety(y)
+    
+def paddle_b_down():
+    y = paddle_b.ycor()
+    y -= 20 #subtract 20 pixels to the y cordinate
+    paddle_b.sety(y)
+    
+    
+# Keyboard binding
+wn.listen() # 'listen' (as in watch) what the user presses
+wn.onkeypress(paddle_a_up, "w") # when the user presses lowercase w, move the paddle up
+wn.onkeypress(paddle_a_down, "s")
+wn.onkeypress(paddle_b_up, "Up") #Up and Down mean the arrow keys
+wn.onkeypress(paddle_b_down, "Down")
+
+    
+
+# Main game loop
+while True:
+    wn.update()
+    
+    
+    # Move ball
+    ball.setx(ball.xcor() + ball.dx) #ball first going to start at 0 pixels, then each time loops plays, it will go by x pixels
+    ball.sety(ball.ycor() + ball.dy) 
+    
+    # Border checking 
+    if ball.ycor() > 290:
+        ball.sety(290)
+        ball.dy *= -1  # reverses the direction 
+    
+    if ball.ycor() < -290:
+        ball.sety(-290)
+        ball.dy *= -1  
+        
+    if ball.xcor() > 390:
+        ball.goto(0, 0) # go back to center
+        ball.dx *= -1
+        score_a += 1
+        pen.clear() #clear the original score from before
+        pen.write ("Player A: {} Player B: {}" .format(score_a, score_b), align = "center", font = ("Courier", 18, "normal"))
+        #Above line updates the printed( {} ) score
+        
+    if ball.xcor() < -390:
+        ball.goto(0, 0) # go back to center
+        ball.dx *= -1
+        score_b += 1
+        pen.clear()
+        pen.write ("Player A: {} Player B: {}" .format(score_a, score_b), align = "center", font = ("Courier", 18, "normal"))
+        
+        
+    
+    # Paddle and ball collisions
+    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < paddle_b.ycor() + 40 and ball.ycor() > paddle_b.ycor() - 40 ):
+        ball.setx(340)
+        ball.dx *= -1
+        
+    if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < paddle_a.ycor() + 40 and ball.ycor() > paddle_a.ycor() - 40 ):
+        ball.setx(-340)
+        ball.dx *= -1
