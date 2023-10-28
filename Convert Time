@@ -1,0 +1,19 @@
+def convert_time(hour: int) -> int:
+    """Return the given time in hours hour from the 24 hour clock to 
+    a time in hours for the 12 hour clock.
+
+    Precondition: 0 <= hour <= 23
+
+    >>> convert_time(0)
+    12
+    >>> convert_time(4)
+    4
+    >>> convert_time(15)
+    3
+    """
+    if hour == 0 :
+        return 12
+    elif (hour > 0) and (hour <= 12) :
+        return hour
+    elif (hour >= 13) and (hour <=24):
+        return hour % 12
